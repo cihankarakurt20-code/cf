@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#0a0a0b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CF">
+<title>CF</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<style>
+@font-face{font-family:'Outfit';font-style:normal;font-display:swap;font-weight:400;src:url(fonts/outfit-latin-ext-400-normal.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Outfit';font-style:normal;font-display:swap;font-weight:400;src:url(fonts/outfit-latin-400-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Outfit';font-style:normal;font-display:swap;font-weight:500;src:url(fonts/outfit-latin-ext-500-normal.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Outfit';font-style:normal;font-display:swap;font-weight:500;src:url(fonts/outfit-latin-500-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Outfit';font-style:normal;font-display:swap;font-weight:600;src:url(fonts/outfit-latin-ext-600-normal.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Outfit';font-style:normal;font-display:swap;font-weight:600;src:url(fonts/outfit-latin-600-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+:root{
+  --bg:#0a0a0b; --card:#151517; --card2:#1d1d20; --line:#2a2a2e;
+  --tx:#f5f5f0; --mut:#8b8b91; --mut2:#5c5c62;
+  --lime:#d6f65a; --coral:#ef5f4e; --pink:#f3c6e6; --cream:#f2f7dc; --grey:#7a7a7e;
+  --ink:#0b0b0c;
+  --r:30px;
+  --sb:env(safe-area-inset-bottom,0px); --st:env(safe-area-inset-top,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--tx);font-family:'Outfit',system-ui,-apple-system,'Segoe UI',sans-serif;
+  -webkit-font-smoothing:antialiased;overscroll-behavior-y:none}
+body{min-height:100dvh}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+input,select{font:inherit;color:inherit}
+.glow{position:fixed;inset:0 0 auto 0;height:520px;pointer-events:none;z-index:0;
+  background:
+   radial-gradient(55% 60% at 78% 8%, rgba(214,246,90,.30), transparent 70%),
+   radial-gradient(55% 55% at 15% 0%, rgba(150,70,45,.45), transparent 72%);}
+.app{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:calc(var(--st) + 14px) 18px calc(var(--sb) + 110px)}
+
+/* ---------- top bar ---------- */
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:22px}
+.ib{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.08);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);flex:none;transition:transform .15s}
+.ib:active{transform:scale(.92)}
+.ib.white{background:#fff;color:var(--ink)}
+.ib.lime{background:var(--lime);color:var(--ink)}
+.ib svg{width:22px;height:22px}
+.mpill{display:flex;align-items:center;gap:2px;background:rgba(255,255,255,.08);border-radius:99px;padding:4px;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.mpill button{width:36px;height:36px;border-radius:50%;display:grid;place-items:center}
+.mpill button:active{background:rgba(255,255,255,.1)}
+.mpill button svg{width:18px;height:18px}
+.mpill span{font-size:15px;font-weight:500;min-width:104px;text-align:center}
+
+/* ---------- typography ---------- */
+.label{font-size:14px;color:var(--mut);font-weight:400;letter-spacing:.1px}
+.h1{font-size:44px;line-height:1.02;font-weight:500;letter-spacing:-1.5px}
+.h1 em{font-style:normal;color:var(--mut)}
+.big{font-size:58px;line-height:1;font-weight:500;letter-spacing:-2.5px;margin-top:8px;white-space:nowrap}
+.big .cur{font-size:.55em;letter-spacing:0;margin-right:4px;color:var(--mut);font-weight:400}
+.dec{opacity:.45;font-size:.6em;letter-spacing:-.5px}
+.neg{color:var(--coral)}
+.sub{font-size:13px;color:var(--mut);margin-top:8px}
+.sec{display:flex;align-items:center;justify-content:space-between;margin:28px 2px 12px}
+.sec h3{font-size:22px;font-weight:500;letter-spacing:-.4px}
+
+/* ---------- quick actions ---------- */
+.qa{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:24px}
+.qa button{display:flex;flex-direction:column;align-items:center;gap:8px}
+.qa .pill{height:62px;width:100%;border-radius:99px;display:grid;place-items:center;background:var(--lime);color:var(--ink);transition:transform .15s}
+.qa .pill.c{background:var(--coral)}
+.qa button:active .pill{transform:scale(.96)}
+.qa .pill svg{width:24px;height:24px}
+.qa small{font-size:14px;font-weight:500}
+
+/* ---------- ring card ---------- */
+.card{background:var(--card);border-radius:var(--r);padding:20px}
+.ringcard{display:flex;align-items:center;gap:18px;margin-top:22px;background:linear-gradient(160deg,#1a1a1d,#111113)}
+.ringwrap{position:relative;width:150px;height:150px;flex:none}
+.ring{width:100%;height:100%}
+.ring circle{fill:none;stroke-width:16;stroke-linecap:round;transition:stroke-dasharray .6s ease, stroke-dashoffset .6s ease}
+.ringc{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.ringc b{font-size:30px;font-weight:500;letter-spacing:-1px}
+.ringc small{font-size:11px;color:var(--mut);margin-top:-2px}
+.legend{flex:1;display:flex;flex-direction:column;gap:14px;min-width:0}
+.lg{display:flex;flex-direction:column;gap:2px}
+.lg > span{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--mut)}
+.lg > span i{width:9px;height:9px;border-radius:50%;background:var(--lime)}
+.lg > span i.c{background:var(--coral)}
+.lg b{font-size:21px;font-weight:500;letter-spacing:-.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lg hr{border:0;border-top:1px solid var(--line)}
+
+/* ---------- month box (cream) ---------- */
+.mbox{background:var(--cream);color:var(--ink);border-radius:var(--r);padding:18px 18px 20px;margin-top:12px;display:block;width:100%;text-align:left;transition:transform .15s}
+.mbox:active{transform:scale(.985)}
+.mbox .hd{display:flex;align-items:center;gap:12px}
+.mbox .hd .dot{width:46px;height:46px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center}
+.mbox .hd .dot svg{width:20px;height:20px}
+.mbox .hd b{font-size:18px;font-weight:500;flex:1}
+.mbox .hd .go{width:44px;height:44px;border-radius:50%;border:1.5px solid rgba(0,0,0,.25);display:grid;place-items:center}
+.mbox .hd .go svg{width:18px;height:18px}
+.mbox .cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+.mbox .cols small{font-size:13px;color:rgba(0,0,0,.5);display:flex;align-items:center;gap:6px}
+.mbox .cols small i{width:8px;height:8px;border-radius:50%;background:#7fa30f}
+.mbox .cols small i.c{background:var(--coral)}
+.mbox .cols b{display:block;font-size:26px;font-weight:500;letter-spacing:-1px;margin-top:2px;white-space:nowrap}
+.mbar{display:flex;height:10px;border-radius:99px;overflow:hidden;margin-top:18px;background:rgba(0,0,0,.08);gap:3px}
+.mbar i{display:block;height:100%;border-radius:99px}
+.mmeta{display:flex;justify-content:space-between;font-size:12px;color:rgba(0,0,0,.5);margin-top:8px}
+.rcard{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--card);border-radius:24px;padding:14px 16px 14px 14px;margin-top:12px;transition:transform .15s}
+.rcard:active{transform:scale(.985)}
+.rcard .av{width:46px;height:46px}
+.rcard .t{flex:1;min-width:0}
+.rcard .t b{display:block;font-size:16px;font-weight:500}
+.rcard .t small{display:block;font-size:12.5px;color:var(--mut);margin-top:2px;line-height:1.35}
+.rcard .a{text-align:right;flex:none}
+.rcard .a b{display:block;font-size:14px;font-weight:500;white-space:nowrap}
+.rcard .go svg{width:20px;height:20px;color:var(--mut)}
+.rtag{display:inline-flex;align-items:center;gap:4px;vertical-align:-2px}
+.rtag svg{width:13px;height:13px}
+.hint{font-size:13px;color:var(--mut);line-height:1.45;margin:14px 4px 0}
+.sheet .sec{margin-top:6px}
+.sheet .sec h2{margin:0}
+
+/* ---------- stacked stat cards ---------- */
+.stack{display:flex;flex-direction:column;margin-top:18px}
+.stat{position:relative;border-radius:26px;padding:18px 22px 16px;color:var(--ink);overflow:hidden;min-height:112px;display:flex;flex-direction:column;justify-content:flex-end}
+.stat + .stat{margin-top:-14px}
+.stat::before{content:"";position:absolute;inset:0 auto 0 0;width:46%;
+  background:repeating-linear-gradient(-55deg,rgba(0,0,0,.09) 0 1.5px,transparent 1.5px 7px);pointer-events:none}
+.stat b{position:relative;font-size:44px;line-height:1;font-weight:500;letter-spacing:-2px;white-space:nowrap}
+.stat b .cur{font-size:.6em;margin-right:3px;letter-spacing:0}
+.stat small{position:relative;font-size:13px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;margin-top:8px}
+.stat .arr{position:absolute;right:20px;top:50%;transform:translateY(-50%);width:42px;height:42px;opacity:.85}
+.stat .meta{position:absolute;right:22px;top:16px;font-size:12px;font-weight:500;opacity:.6}
+.s-lime{background:var(--lime)} .s-coral{background:var(--coral)} .s-white{background:#f4f4f1} .s-grey{background:var(--grey);color:#fff}
+.s-pink{background:var(--pink)} .s-cream{background:var(--cream)}
+
+/* ---------- segmented ---------- */
+.seg{display:flex;background:var(--card);border-radius:99px;padding:5px;margin-top:20px}
+.seg button{flex:1;height:42px;border-radius:99px;font-size:15px;font-weight:500;color:var(--mut);transition:background .2s,color .2s}
+.seg button.on{background:#fff;color:var(--ink)}
+.sheet .seg{background:var(--card2)}
+
+/* ---------- list ---------- */
+.list{display:flex;flex-direction:column;gap:2px;margin-top:8px}
+.row{display:flex;align-items:center;gap:14px;padding:12px 4px;border-radius:18px;width:100%;text-align:left}
+.row:active{background:rgba(255,255,255,.04)}
+.av{width:50px;height:50px;border-radius:50%;background:#fff;color:var(--ink);display:grid;place-items:center;flex:none;font-weight:600;font-size:18px}
+.av svg{width:22px;height:22px}
+.av.lime{background:var(--lime)} .av.coral{background:var(--coral)} .av.pink{background:var(--pink)} .av.dark{background:var(--card2);color:var(--tx)}
+.row .t{flex:1;min-width:0}
+.row .t b{display:block;font-size:16px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .t small{display:block;font-size:13px;color:var(--mut);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .a{text-align:right;flex:none}
+.row .a b{display:block;font-size:16px;font-weight:500;white-space:nowrap}
+.row .a small{display:block;font-size:12px;color:var(--mut);margin-top:2px}
+.row.done{opacity:.42}
+.row.done .t b{text-decoration:line-through}
+.pos{color:var(--lime)}
+.badge{display:inline-block;font-size:11px;font-weight:600;padding:3px 8px;border-radius:99px;background:rgba(255,255,255,.08);color:var(--mut)}
+.badge.late{background:rgba(239,95,78,.16);color:var(--coral)}
+.badge.soon{background:rgba(214,246,90,.14);color:var(--lime)}
+.chk{width:30px;height:30px;border-radius:50%;border:1.6px solid var(--mut2);display:grid;place-items:center;flex:none}
+.chk svg{width:16px;height:16px;opacity:0}
+.chk.on{background:var(--lime);border-color:var(--lime);color:var(--ink)}
+.chk.on svg{opacity:1}
+.day{font-size:12px;color:var(--mut2);text-transform:uppercase;letter-spacing:1px;margin:18px 4px 2px;font-weight:500}
+.empty{text-align:center;color:var(--mut);padding:44px 20px;font-size:15px;line-height:1.5}
+.empty b{display:block;color:var(--tx);font-weight:500;font-size:17px;margin-bottom:4px}
+
+.chips{display:flex;gap:8px;overflow-x:auto;margin:16px -18px 0;padding:0 18px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;display:flex;align-items:center;gap:8px;background:var(--card);border-radius:99px;padding:8px 14px 8px 8px;font-size:14px}
+.chip i{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--card2)}
+.chip i svg{width:14px;height:14px}
+.chip b{font-weight:500}
+.chip span{color:var(--mut)}
+
+/* ---------- bottom nav ---------- */
+.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--sb) + 12px);z-index:20;width:calc(100% - 28px);max-width:452px;
+  display:flex;gap:4px;padding:7px;border-radius:99px;background:rgba(28,28,31,.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  box-shadow:0 10px 40px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.06)}
+.nav button{flex:1;height:56px;border-radius:99px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--mut);transition:background .25s,color .25s}
+.nav button svg{width:22px;height:22px}
+.nav button span{font-size:10.5px;font-weight:500;white-space:nowrap}
+.nav button.on{background:#fff;color:var(--ink)}
+
+/* ---------- detail screen ---------- */
+.screen{position:fixed;inset:0;z-index:30;background:var(--bg);overflow-y:auto;transform:translateX(100%);transition:transform .32s cubic-bezier(.2,.8,.2,1);visibility:hidden}
+.screen.open{transform:none;visibility:visible}
+.screen .app{padding-bottom:calc(var(--sb) + 40px)}
+
+/* ---------- bottom sheet ---------- */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:40;opacity:0;pointer-events:none;transition:opacity .25s}
+.scrim.open{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:50%;bottom:0;z-index:41;width:100%;max-width:480px;max-height:92dvh;overflow-y:auto;
+  background:#131315;border-radius:30px 30px 0 0;padding:10px 20px calc(var(--sb) + 22px);
+  transform:translate(-50%,105%);transition:transform .32s cubic-bezier(.2,.8,.2,1)}
+.sheet.open{transform:translate(-50%,0)}
+.grab{width:42px;height:5px;border-radius:9px;background:#333;margin:0 auto 14px}
+.sheet h2{font-size:24px;font-weight:500;letter-spacing:-.5px;margin-bottom:4px}
+.amt{display:flex;align-items:baseline;justify-content:center;gap:6px;margin:22px 0 6px}
+.amt span{font-size:30px;color:var(--mut)}
+.amt input{width:100%;max-width:280px;background:none;border:0;outline:0;font-size:50px;font-weight:500;letter-spacing:-2px;text-align:center;color:var(--tx)}
+.amt input::placeholder{color:#3a3a3f}
+.fl{display:block;margin-top:14px}
+.fl > small{display:block;font-size:13px;color:var(--mut);margin:0 4px 6px}
+.in{width:100%;height:54px;border-radius:18px;background:var(--card2);border:1px solid transparent;padding:0 16px;font-size:16px;outline:0;-webkit-appearance:none;appearance:none}
+.in:focus{border-color:#3d3d42}
+input[type=date].in,input[type=month].in{display:flex;align-items:center}
+input::-webkit-date-and-time-value{text-align:left}
+.cats{display:flex;flex-wrap:wrap;gap:8px}
+.cat{display:flex;align-items:center;gap:8px;height:44px;padding:0 16px 0 6px;border-radius:99px;background:var(--card2);font-size:15px;font-weight:500;transition:background .15s,color .15s}
+.cat i{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.07)}
+.cat i svg{width:16px;height:16px}
+.cat.on{background:var(--lime);color:var(--ink)}
+.cat.on.c{background:var(--coral)}
+.cat.on i{background:rgba(0,0,0,.1)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{width:100%;height:58px;border-radius:99px;background:var(--lime);color:var(--ink);font-size:17px;font-weight:600;margin-top:22px;transition:transform .15s}
+.btn:active{transform:scale(.98)}
+.btn.ghost{background:transparent;color:var(--coral);height:48px;margin-top:8px;font-weight:500;font-size:15px}
+.btn.dark{background:var(--card2);color:var(--tx)}
+.menu .row{padding:14px 4px}
+.note{font-size:13px;color:var(--mut);line-height:1.5;margin-top:16px;padding:14px 16px;background:var(--card2);border-radius:18px}
+
+.toast{position:fixed;left:50%;top:calc(var(--st) + 14px);transform:translate(-50%,calc(-100% - 60px));z-index:60;background:#fff;color:var(--ink);
+  padding:12px 20px;border-radius:99px;font-size:14px;font-weight:500;transition:transform .3s;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+.toast.show{transform:translate(-50%,0)}
+.view{animation:fade .3s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (max-width:370px){.big{font-size:48px}.stat b{font-size:38px}.h1{font-size:38px}.ringwrap{width:128px;height:128px}}
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<main class="app" id="view"></main>
+
+<nav class="nav" id="nav">
+  <button data-tab="home"></button>
+  <button data-tab="debts"></button>
+  <button data-tab="subs"></button>
+  <button data-tab="cards"></button>
+</nav>
+
+<section class="screen" id="detail"><div class="glow" style="position:absolute"></div><div class="app" id="detailBody"></div></section>
+
+<div class="scrim" id="scrim" data-act="close"></div>
+<div class="sheet" id="sheet"></div>
+<div class="toast" id="toast"></div>
+<input type="file" id="fileIn" accept="application/json,.json" hidden>
+
+<script>
+/* =========================================================
+   CF — kişisel gelir / gider uygulaması
+   Veriler cihazda (localStorage) saklanır.
+   ========================================================= */
+const KEY = 'cf.v1', OLD_KEY = 'cuzdan.v1';
+
+/* ---------- ikonlar ---------- */
+const P = (d, extra='') => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ${extra}>${d}</svg>`;
+const I = {
+  home: P('<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h14V9.5"/><path d="M10 20v-5h4v5"/>'),
+  swap: P('<path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 12 4 4-4 4"/><path d="M21 16H7"/>'),
+  repeat: P('<path d="M17 2l4 4-4 4"/><path d="M3 11V9a3 3 0 0 1 3-3h15"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a3 3 0 0 1-3 3H3"/>'),
+  card: P('<rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M2.5 10h19"/><path d="M6.5 15h4"/>'),
+  plus: P('<path d="M12 5v14M5 12h14"/>'),
+  back: P('<path d="M19 12H5"/><path d="m11 18-6-6 6-6"/>'),
+  ur: P('<path d="M7 17 17 7"/><path d="M8 7h9v9"/>'),
+  dl: P('<path d="M17 7 7 17"/><path d="M16 17H7V8"/>'),
+  cl: P('<path d="m15 18-6-6 6-6"/>'),
+  cr: P('<path d="m9 18 6-6-6-6"/>'),
+  grid: P('<circle cx="8" cy="8" r="1.6" fill="currentColor"/><circle cx="16" cy="8" r="1.6" fill="currentColor"/><circle cx="8" cy="16" r="1.6" fill="currentColor"/><circle cx="16" cy="16" r="1.6" fill="currentColor"/>'),
+  dots: P('<circle cx="5" cy="12" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/><circle cx="19" cy="12" r="1.3" fill="currentColor"/>'),
+  brief: P('<rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/>'),
+  pen: P('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>'),
+  bank: P('<path d="M3 10 12 4l9 6"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/><path d="M3 21h18"/>'),
+  hand: P('<path d="M7 11V6.5a1.5 1.5 0 0 1 3 0V11"/><path d="M10 10V4.5a1.5 1.5 0 0 1 3 0V10"/><path d="M13 10V5.5a1.5 1.5 0 0 1 3 0V12"/><path d="M16 9.5a1.5 1.5 0 0 1 3 0V14a7 7 0 0 1-7 7h-.5a6 6 0 0 1-5-2.7L4 15a1.5 1.5 0 0 1 2.4-1.8L7 14"/>'),
+  check: P('<path d="m5 12.5 4.5 4.5L19 7.5"/>', 'stroke-width="2.6"'),
+  chart: P('<path d="M5 20V11M10 20V5M15 20v-7M20 20v-4"/>', 'stroke-width="2.4"'),
+  down: P('<path d="M12 4v12"/><path d="m6 11 6 6 6-6"/><path d="M4 20h16"/>'),
+  up: P('<path d="M12 20V8"/><path d="m6 13 6-6 6 6"/><path d="M4 4h16"/>'),
+  trash: P('<path d="M4 7h16"/><path d="M10 11v6M14 11v6"/><path d="M6 7l1 13h10l1-13"/><path d="M9 7V4h6v3"/>'),
+  user: P('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'),
+  sparkle: P('<path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8"/>'),
+};
+
+/* ---------- kategoriler ---------- */
+const CATS = {
+  in:  [ {k:'maas', n:'Maaş', i:'brief', c:'#d6f65a'}, {k:'telif', n:'Telif', i:'pen', c:'#f3c6e6'}, {k:'diger', n:'Diğer', i:'dots', c:'#f2f7dc'} ],
+  out: [ {k:'kira', n:'Kira', i:'home', c:'#ef5f4e'}, {k:'kk', n:'KK', i:'card', c:'#0b0b0c'}, {k:'finansman', n:'Finansman', i:'bank', c:'#8a8a8f'}, {k:'borc', n:'Borç', i:'hand', c:'#f3c6e6'} ],
+};
+const catOf = (type, k) => CATS[type].find(c => c.k === k) || {k, n:k, i:'dots', c:'#888'};
+
+/* ---------- veri ---------- */
+// tx: tek seferlik kayıtlar · rec: her ay tekrarlanan (düzenli) gelir/giderler
+const blank = () => ({ tx: [], rec: [], debts: [], subs: [], cards: [] });
+function load(){ try { const d = JSON.parse(localStorage.getItem(KEY) || localStorage.getItem(OLD_KEY)); if (d && typeof d === 'object') return Object.assign(blank(), d); } catch(e){} return blank(); }
+let S = load();
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){ toast('Kaydedilemedi'); } }
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+
+/* ---------- yardımcılar ---------- */
+const MONTHS = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+const MSHORT = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+const pad = n => String(n).padStart(2,'0');
+const todayStr = () => { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; };
+const ymOf = s => s.slice(0,7);
+const parseD = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d||1); };
+const addMonth = (ym, n) => { const d = parseD(ym+'-01'); d.setMonth(d.getMonth()+n); return `${d.getFullYear()}-${pad(d.getMonth()+1)}`; };
+const monthLabel = ym => { const [y,m] = ym.split('-').map(Number); return `${MONTHS[m-1]} ${y}`; };
+const dayLabel = s => { const d = parseD(s); return `${d.getDate()} ${MSHORT[d.getMonth()]}`; };
+const dayLong = s => { const d = parseD(s); const t = todayStr(); if (s === t) return 'Bugün';
+  const y = new Date(); y.setDate(y.getDate()-1); if (s === `${y.getFullYear()}-${pad(y.getMonth()+1)}-${pad(y.getDate())}`) return 'Dün';
+  return `${d.getDate()} ${MONTHS[d.getMonth()]}`; };
+const daysTo = s => Math.round((parseD(s) - parseD(todayStr())) / 864e5);
+const NF = new Intl.NumberFormat('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2});
+const fmt = n => NF.format(Math.abs(n) < 0.005 ? 0 : n);
+const money = (n, sign='') => { const s = fmt(Math.abs(n)); const [a,b] = s.split(','); return `${sign}₺${a}<span class="dec">,${b}</span>`; };
+const moneyPlain = n => '₺' + fmt(n);
+const short = n => { if (Math.abs(n) >= 1e7) return (n/1e6).toLocaleString('tr-TR',{maximumFractionDigits:2}) + ' Mn'; const [a,b] = fmt(n).split(','); return b === '00' ? a : `${a}<span class="dec">,${b}</span>`; };
+const sum = (arr, f = x => x.amount) => arr.reduce((s,x) => s + (+f(x) || 0), 0);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const parseAmt = v => { v = String(v||'').trim().replace(/[₺\s]/g,''); if (!v) return NaN;
+  if (v.includes(',')) v = v.replace(/\./g,'').replace(',', '.'); else if ((v.match(/\./g)||[]).length > 1 || /\.\d{3}$/.test(v)) v = v.replace(/\./g,'');
+  return parseFloat(v); };
+const amtInput = n => n ? fmt(+n).replace(/,00$/, '') : '';
+function toast(msg){ const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), 1800); }
+
+/* ---------- durum ---------- */
+const st = { tab: 'home', month: ymOf(todayStr()), cardMonth: ymOf(todayStr()), debtKind: 'borc', txFilter: 'all', detail: false };
+
+/* =========================================================
+   ANA SAYFA
+   ========================================================= */
+function ring(inc, out){
+  const R = 62, C = 2*Math.PI*R, tot = inc + out;
+  let segs = '';
+  if (tot > 0){
+    const gap = (inc > 0 && out > 0) ? 22 : 0;
+    const li = C*inc/tot, lo = C*out/tot;
+    if (inc > 0) segs += `<circle cx="80" cy="80" r="${R}" stroke="var(--lime)" stroke-dasharray="${Math.max(li-gap, .01)} ${C}" stroke-dashoffset="${-gap/2}"/>`;
+    if (out > 0) segs += `<circle cx="80" cy="80" r="${R}" stroke="var(--coral)" stroke-dasharray="${Math.max(lo-gap, .01)} ${C}" stroke-dashoffset="${-(li + gap/2)}"/>`;
+  }
+  return `<svg class="ring" viewBox="0 0 160 160"><g transform="rotate(-90 80 80)"><circle cx="80" cy="80" r="${R}" stroke="#232326"/>${segs}</g></svg>`;
+}
+
+/* ---------- düzenli kayıtlar ---------- */
+const curYM = () => ymOf(todayStr());
+const mDiff = (a, b) => (+b.slice(0,4) - +a.slice(0,4))*12 + (+b.slice(5) - +a.slice(5)); // a→b kaç ay
+const dim = ym => new Date(+ym.slice(0,4), +ym.slice(5), 0).getDate();
+const recAmt = (r, ym) => (r.over && r.over[ym] != null) ? r.over[ym] : r.amount;
+const recActive = (r, ym) => ym >= r.start && (!r.end || ym <= r.end) && !(r.skip||[]).includes(ym);
+function occ(ym){
+  return (S.rec||[]).filter(r => recActive(r, ym)).map(r => ({
+    id: r.id + '@' + ym, rid: r.id, type: r.type, cat: r.cat, amount: recAmt(r, ym), note: r.note,
+    date: `${ym}-${pad(Math.min(r.day||1, dim(ym)))}`, ts: 0,
+  }));
+}
+// "Düzenli · 3/12" ya da "Düzenli · süresiz"
+const ymShort = ym => `${MSHORT[+ym.slice(5)-1]} ${ym.slice(0,4)}`;
+function recInfo(r, ym){
+  if (r.mode === 'count' && r.tTotal){ const i = mDiff(r.tStart || r.start, ym) + 1; return `Taksit ${Math.min(Math.max(i,1), r.tTotal)}/${r.tTotal}`; }
+  if (r.mode === 'month' && r.end) return `Her ay · son ay ${ymShort(r.end)}`;
+  return 'Her ay';
+}
+// bugüne kadar gerçekleşen düzenli tutarlar (tüm zamanlar bakiyesi için)
+function recTotal(type){
+  const upto = curYM(); let s = 0;
+  for (const r of (S.rec||[]).filter(r => r.type === type)){
+    const last = r.end && r.end < upto ? r.end : upto;
+    for (let m = r.start, g = 0; m <= last && g < 1200; m = addMonth(m, 1), g++) if (!(r.skip||[]).includes(m)) s += +recAmt(r, m) || 0;
+  }
+  return s;
+}
+
+function monthTx(ym){ return S.tx.filter(t => t.date && t.date.startsWith(ym)).concat(occ(ym)); }
+
+function renderHome(){
+  const tx = monthTx(st.month);
+  const inc = sum(tx.filter(t => t.type === 'in')), out = sum(tx.filter(t => t.type === 'out'));
+  const net = inc - out;
+  const allNet = sum(S.tx.filter(t => t.type === 'in')) + recTotal('in') - sum(S.tx.filter(t => t.type === 'out')) - recTotal('out');
+  const ro = occ(st.month), rIn = sum(ro.filter(t => t.type === 'in')), rOut = sum(ro.filter(t => t.type === 'out'));
+  const activeRec = (S.rec||[]).filter(r => !r.end || r.end >= st.month).length;
+  const pct = inc > 0 ? Math.round(out / inc * 100) : (out > 0 ? null : 0);
+
+  // gider kategori çubuğu
+  const outs = CATS.out.map(c => ({...c, v: sum(tx.filter(t => t.type==='out' && t.cat===c.k))})).filter(c => c.v > 0);
+  const bar = out > 0 ? outs.map(c => `<i style="flex:${c.v};background:${c.c}"></i>`).join('') : '<i style="flex:1;background:transparent"></i>';
+
+  return `
+  <header class="top">
+    <button class="ib" data-act="menu" aria-label="Menü">${I.grid}</button>
+    <div class="mpill"><button data-act="pm" aria-label="Önceki ay">${I.cl}</button><span>${monthLabel(st.month)}</span><button data-act="nm" aria-label="Sonraki ay">${I.cr}</button></div>
+    <button class="ib white" data-act="add-tx" aria-label="Ekle">${I.plus}</button>
+  </header>
+
+  <div class="label">Net bakiye · ${MONTHS[+st.month.slice(5)-1]}</div>
+  <div class="big ${net < 0 ? 'neg' : ''}">${net < 0 ? '−' : ''}<span class="cur">₺</span>${fmt(Math.abs(net)).split(',')[0]}<span class="dec">,${fmt(Math.abs(net)).split(',')[1]}</span></div>
+  <div class="sub">Tüm zamanlar: ${allNet < 0 ? '−' : ''}${moneyPlain(Math.abs(allNet))}</div>
+
+  <div class="qa">
+    <button data-act="add-tx" data-type="in"><div class="pill">${I.dl}</div><small>Gelir ekle</small></button>
+    <button data-act="add-tx" data-type="out"><div class="pill c">${I.ur}</div><small>Gider ekle</small></button>
+  </div>
+
+  <div class="card ringcard">
+    <div class="ringwrap">${ring(inc, out)}
+      <div class="ringc"><b>${pct === null ? '—' : '%' + pct}</b><small>harcandı</small></div>
+    </div>
+    <div class="legend">
+      <div class="lg"><span><i></i>Gelir</span><b>${money(inc)}</b></div>
+      <hr>
+      <div class="lg"><span><i class="c"></i>Gider</span><b>${money(out)}</b></div>
+    </div>
+  </div>
+
+  <button class="mbox" data-act="open-detail">
+    <div class="hd"><div class="dot">${I.chart}</div><b>Bu ayın hareketleri</b><div class="go">${I.ur}</div></div>
+    <div class="cols">
+      <div><small><i></i>Gelir</small><b>${money(inc)}</b></div>
+      <div><small><i class="c"></i>Gider</small><b>${money(out)}</b></div>
+    </div>
+    <div class="mbar">${bar}</div>
+    <div class="mmeta"><span>${tx.length} işlem</span><span>${outs.length ? outs.map(c => c.n).join(' · ') : 'Henüz gider yok'}</span></div>
+  </button>
+
+  <button class="rcard" data-act="rec-list">
+    <div class="av dark">${I.repeat}</div>
+    <div class="t"><b>Düzenli gelir & giderler</b><small>${activeRec ? activeRec + ' kayıt · her ay otomatik eklenir' : 'Maaş, kira, taksit… bir kez gir, her ay eklensin'}</small></div>
+    <div class="a">${activeRec ? `<b class="pos">+${moneyPlain(rIn)}</b><b>−${moneyPlain(rOut)}</b>` : `<span class="go">${I.cr}</span>`}</div>
+  </button>
+  `;
+}
+
+/* ---------- ay detayı ---------- */
+function renderDetail(){
+  const tx = monthTx(st.month).slice().sort((a,b) => b.date.localeCompare(a.date) || (b.ts||0) - (a.ts||0));
+  const inc = sum(tx.filter(t => t.type === 'in')), out = sum(tx.filter(t => t.type === 'out'));
+  const f = st.txFilter;
+  const shown = f === 'all' ? tx : tx.filter(t => t.type === f);
+  const types = f === 'all' ? ['in','out'] : [f];
+  const chips = types.flatMap(ty => CATS[ty].map(c => ({...c, ty, v: sum(tx.filter(t => t.type===ty && t.cat===c.k))}))).filter(c => c.v > 0);
+
+  let list = '', lastDay = '';
+  for (const t of shown){
+    if (t.date !== lastDay){ list += `<div class="day">${dayLong(t.date)}</div>`; lastDay = t.date; }
+    const c = catOf(t.type, t.cat);
+    const r = t.rid ? S.rec.find(x => x.id === t.rid) : null;
+    const subline = r ? `<span class="rtag">${I.repeat}${recInfo(r, st.month)}</span>${t.note && t.note !== c.n ? ' · ' + esc(t.note) : ''}` : esc(t.note || (t.type==='in' ? 'Gelir' : 'Gider'));
+    list += `<button class="row" data-act="edit-tx" data-id="${t.id}">
+      <div class="av ${t.type==='in' ? 'lime' : 'coral'}">${I[c.i]}</div>
+      <div class="t"><b>${esc(c.n)}</b><small>${subline}</small></div>
+      <div class="a"><b class="${t.type==='in' ? 'pos' : ''}">${t.type==='in' ? '+' : '−'}${moneyPlain(t.amount)}</b><small>${dayLabel(t.date)}</small></div>
+    </button>`;
+  }
+
+  return `
+  <header class="top">
+    <button class="ib" data-act="close-detail" aria-label="Geri">${I.back}</button>
+    <div class="mpill"><button data-act="pm">${I.cl}</button><span>${monthLabel(st.month)}</span><button data-act="nm">${I.cr}</button></div>
+    <button class="ib white" data-act="add-tx" aria-label="Ekle">${I.plus}</button>
+  </header>
+  <div class="h1">Bu ay</div>
+  <div class="stack">
+    <div class="stat s-lime"><span class="meta">${tx.filter(t=>t.type==='in').length} kayıt</span><b><span class="cur">₺</span>${short(inc)}</b><small>Gelir</small><span class="arr">${I.dl}</span></div>
+    <div class="stat s-coral"><span class="meta">${tx.filter(t=>t.type==='out').length} kayıt</span><b><span class="cur">₺</span>${short(out)}</b><small>Gider</small><span class="arr">${I.ur}</span></div>
+    <div class="stat s-white"><b>${inc - out < 0 ? '−' : ''}<span class="cur">₺</span>${short(Math.abs(inc - out))}</b><small>Net</small></div>
+  </div>
+  <div class="seg">
+    <button class="${f==='all'?'on':''}" data-act="txf" data-v="all">Tümü</button>
+    <button class="${f==='in'?'on':''}" data-act="txf" data-v="in">Gelir</button>
+    <button class="${f==='out'?'on':''}" data-act="txf" data-v="out">Gider</button>
+  </div>
+  ${chips.length ? `<div class="chips">${chips.map(c => `<div class="chip"><i style="background:${c.c};color:${c.c==='#0b0b0c'?'#fff':'#0b0b0c'}">${I[c.i]}</i><b>${c.n}</b><span>${moneyPlain(c.v)}</span></div>`).join('')}</div>` : ''}
+  <div class="list">${list || `<div class="empty"><b>Bu ay kayıt yok</b>Sağ üstteki + ile gelir veya gider ekleyebilirsin.</div>`}</div>
+  `;
+}
+
+/* =========================================================
+   BORÇLAR / ALACAKLAR
+   ========================================================= */
+function dueBadge(d, done, doneTxt = 'Kapandı'){
+  if (done) return `<span class="badge">${doneTxt}</span>`;
+  if (!d) return '';
+  const n = daysTo(d);
+  if (n < 0) return `<span class="badge late">${-n} gün geçti</span>`;
+  if (n === 0) return `<span class="badge late">Bugün</span>`;
+  if (n <= 7) return `<span class="badge soon">${n} gün kaldı</span>`;
+  return `<span class="badge">${n} gün</span>`;
+}
+function renderDebts(){
+  const borc = S.debts.filter(d => d.kind === 'borc'), alacak = S.debts.filter(d => d.kind === 'alacak');
+  const tb = sum(borc.filter(d => !d.done)), ta = sum(alacak.filter(d => !d.done));
+  const k = st.debtKind;
+  const items = (k === 'borc' ? borc : alacak).slice().sort((a,b) => (a.done - b.done) || (a.date||'9').localeCompare(b.date||'9'));
+  const list = items.map(d => `
+    <div class="row ${d.done ? 'done' : ''}">
+      <button class="chk ${d.done ? 'on' : ''}" data-act="toggle-debt" data-id="${d.id}" aria-label="Tamamlandı">${I.check}</button>
+      <button class="t" style="text-align:left" data-act="edit-debt" data-id="${d.id}">
+        <b>${esc(d.person)}</b>
+        <small>${d.date ? (k==='borc' ? 'Son ödeme ' : 'Alacak tarihi ') + dayLabel(d.date) + ' ' + parseD(d.date).getFullYear() : 'Tarih yok'}${d.note ? ' · ' + esc(d.note) : ''}</small>
+      </button>
+      <button class="a" data-act="edit-debt" data-id="${d.id}"><b>${moneyPlain(d.amount)}</b><small>${dueBadge(d.date, d.done)}</small></button>
+    </div>`).join('');
+
+  return `
+  <header class="top">
+    <button class="ib" data-act="menu">${I.grid}</button>
+    <span></span>
+    <button class="ib white" data-act="add-debt">${I.plus}</button>
+  </header>
+  <div class="h1">Borçlar<br><em>&amp; Alacaklar</em></div>
+  <div class="stack">
+    <div class="stat s-coral"><span class="meta">${borc.filter(d=>!d.done).length} açık</span><b><span class="cur">₺</span>${short(tb)}</b><small>Toplam borç</small><span class="arr">${I.ur}</span></div>
+    <div class="stat s-lime"><span class="meta">${alacak.filter(d=>!d.done).length} açık</span><b><span class="cur">₺</span>${short(ta)}</b><small>Toplam alacak</small><span class="arr">${I.dl}</span></div>
+  </div>
+  <div class="seg">
+    <button class="${k==='borc'?'on':''}" data-act="dk" data-v="borc">Borçlarım</button>
+    <button class="${k==='alacak'?'on':''}" data-act="dk" data-v="alacak">Alacaklarım</button>
+  </div>
+  <div class="list">${list || `<div class="empty"><b>${k==='borc' ? 'Borç kaydı yok' : 'Alacak kaydı yok'}</b>+ ile ${k==='borc' ? 'kime borçlu olduğunu' : 'kimden alacağın olduğunu'} ekle.</div>`}</div>
+  `;
+}
+
+/* =========================================================
+   ABONELİKLER
+   ========================================================= */
+function renderSubs(){
+  const m = sum(S.subs, s => s.period === 'yil' ? s.amount/12 : s.amount);
+  const y = sum(S.subs, s => s.period === 'yil' ? s.amount : s.amount*12);
+  const items = S.subs.slice().sort((a,b) => (b.period==='yil' ? b.amount/12 : b.amount) - (a.period==='yil' ? a.amount/12 : a.amount));
+  const colors = ['lime','pink','','coral'];
+  const list = items.map((s,i) => `
+    <button class="row" data-act="edit-sub" data-id="${s.id}">
+      <div class="av ${colors[i % colors.length]}">${esc((s.name||'?').trim().charAt(0).toLocaleUpperCase('tr-TR'))}</div>
+      <div class="t"><b>${esc(s.name)}</b><small>${s.period==='yil' ? 'Yıllık' : 'Aylık'}${s.day ? ' · her ' + (s.period==='yil' && s.month ? s.day + ' ' + MONTHS[s.month-1] : 'ayın ' + s.day + '\'i') : ''}</small></div>
+      <div class="a"><b>${moneyPlain(s.amount)}</b><small>${s.period==='yil' ? '≈ ' + moneyPlain(s.amount/12) + '/ay' : moneyPlain(s.amount*12) + '/yıl'}</small></div>
+    </button>`).join('');
+
+  return `
+  <header class="top">
+    <button class="ib" data-act="menu">${I.grid}</button>
+    <span></span>
+    <button class="ib white" data-act="add-sub">${I.plus}</button>
+  </header>
+  <div class="h1">Abonelikler</div>
+  <div class="stack">
+    <div class="stat s-lime"><span class="meta">${S.subs.length} abonelik</span><b><span class="cur">₺</span>${short(m)}</b><small>Aylık toplam</small><span class="arr">${I.repeat}</span></div>
+    <div class="stat s-white"><b><span class="cur">₺</span>${short(y)}</b><small>Yıllık toplam</small><span class="arr">${I.ur}</span></div>
+  </div>
+  <div class="sec"><h3>Aboneliklerim</h3></div>
+  <div class="list" style="margin-top:0">${list || `<div class="empty"><b>Abonelik yok</b>Netflix, Spotify, iCloud… + ile ekle.</div>`}</div>
+  `;
+}
+
+/* =========================================================
+   KARTLAR (aylık ekstreler)
+   ========================================================= */
+function renderCards(){
+  const m = st.cardMonth;
+  const items = S.cards.filter(c => c.month === m).sort((a,b) => (a.done - b.done) || b.amount - a.amount);
+  const tot = sum(items), open = sum(items.filter(c => !c.done));
+  const list = items.map(c => `
+    <div class="row ${c.done ? 'done' : ''}">
+      <button class="chk ${c.done ? 'on' : ''}" data-act="toggle-card" data-id="${c.id}" aria-label="Ödendi">${I.check}</button>
+      <button class="t" style="text-align:left" data-act="edit-card" data-id="${c.id}">
+        <b>${esc(c.name)}</b><small>${c.due ? 'Son ödeme ' + dayLabel(c.due) : 'Ekstre'}${c.note ? ' · ' + esc(c.note) : ''}</small>
+      </button>
+      <button class="a" data-act="edit-card" data-id="${c.id}"><b>${moneyPlain(c.amount)}</b><small>${c.due ? dueBadge(c.due, c.done, 'Ödendi') : (c.done ? '<span class="badge">Ödendi</span>' : '')}</small></button>
+    </div>`).join('');
+
+  return `
+  <header class="top">
+    <button class="ib" data-act="menu">${I.grid}</button>
+    <div class="mpill"><button data-act="pcm">${I.cl}</button><span>${monthLabel(m)}</span><button data-act="ncm">${I.cr}</button></div>
+    <button class="ib white" data-act="add-card">${I.plus}</button>
+  </header>
+  <div class="h1">Kartlar</div>
+  <div class="stack">
+    <div class="stat s-pink"><span class="meta">${items.length} ekstre</span><b><span class="cur">₺</span>${short(tot)}</b><small>Toplam ekstre</small><span class="arr">${I.card}</span></div>
+    <div class="stat s-grey"><b><span class="cur">₺</span>${short(open)}</b><small>Ödenmemiş</small><span class="arr">${I.ur}</span></div>
+  </div>
+  <div class="sec"><h3>${MONTHS[+m.slice(5)-1]} ekstreleri</h3></div>
+  <div class="list" style="margin-top:0">${list || `<div class="empty"><b>Bu ay ekstre yok</b>+ ile kartının aylık ekstresini yaz.</div>`}</div>
+  `;
+}
+
+/* =========================================================
+   RENDER
+   ========================================================= */
+const TABS = [
+  {k:'home', n:'Ana Sayfa', i:'home', r: renderHome},
+  {k:'debts', n:'Borç/Alacak', i:'swap', r: renderDebts},
+  {k:'subs', n:'Abonelikler', i:'repeat', r: renderSubs},
+  {k:'cards', n:'Kartlar', i:'card', r: renderCards},
+];
+function render(anim){
+  const v = document.getElementById('view');
+  v.innerHTML = TABS.find(t => t.k === st.tab).r();
+  if (anim){ v.classList.remove('view'); void v.offsetWidth; v.classList.add('view'); }
+  document.querySelectorAll('#nav button').forEach(b => {
+    const t = TABS.find(x => x.k === b.dataset.tab);
+    b.innerHTML = `${I[t.i]}<span>${t.n}</span>`;
+    b.classList.toggle('on', t.k === st.tab);
+  });
+  if (st.detail) document.getElementById('detailBody').innerHTML = renderDetail();
+}
+
+/* =========================================================
+   FORM (alt sayfa)
+   ========================================================= */
+let F = null; // {kind, id, ...alanlar}
+const sheet = document.getElementById('sheet'), scrim = document.getElementById('scrim');
+function openSheet(html){ sheet.innerHTML = `<div class="grab"></div>` + html; sheet.scrollTop = 0; sheet.classList.add('open'); scrim.classList.add('open'); }
+function closeSheet(){ sheet.classList.remove('open'); scrim.classList.remove('open'); F = null; }
+
+function syncF(){ if (!F) return; sheet.querySelectorAll('[data-f]').forEach(el => F[el.dataset.f] = el.value); }
+
+function formHTML(){
+  const del = F.id ? `<button class="btn ghost" data-act="del">${F._confirm ? 'Silmek için tekrar dokun' : 'Sil'}</button>` : '';
+  const amount = `<div class="amt"><span>₺</span><input data-f="amount" inputmode="decimal" placeholder="0" value="${esc(F.amount)}" autocomplete="off"></div>`;
+  if (F.kind === 'tx'){
+    const c = F.type === 'out', mon = F.rep === 'monthly', isRec = !!F.rid, occM = F.ym;
+    const word = c ? 'gider' : 'gelir';
+    const title = isRec ? `Düzenli ${word}` : F.id ? 'Düzenle' : (mon ? `Düzenli ${word} ekle` : (c ? 'Gider ekle' : 'Gelir ekle'));
+    const scopeSeg = occM ? `<div class="seg"><button class="${F.scope==='this'?'on':''}" data-act="fset" data-k="scope" data-v="this">Sadece ${MONTHS[+occM.slice(5)-1]}</button><button class="${F.scope==='future'?'on':''}" data-act="fset" data-k="scope" data-v="future">Bu aydan itibaren</button></div>` : '';
+
+    // tek bir ayı değiştir: yalnız tutar
+    if (F.scope === 'this'){
+      return `<h2>${title}</h2>${scopeSeg}${amount}
+        <p class="hint">Yalnızca <b>${monthLabel(occM)}</b> tutarı değişir. Diğer aylar aynı kalır.</p>
+        <button class="btn" data-act="save">Kaydet</button>
+        <button class="btn ghost" data-act="del">${F._confirm ? 'Emin misin? Tekrar dokun' : 'Bu ayı atla (bu ay eklenmesin)'}</button>`;
+    }
+    const delTxt = F.scope === 'future' ? 'Bu aydan itibaren sonlandır' : isRec ? 'Tamamen sil (geçmiş aylar dahil)' : 'Sil';
+    const delBtn = (F.id || isRec) ? `<button class="btn ghost" data-act="del">${F._confirm ? 'Emin misin? Tekrar dokun' : delTxt}</button>` : '';
+    const endSeg = `<div class="seg"><button class="${F.endMode==='none'?'on':''}" data-act="fset" data-k="endMode" data-v="none">Süresiz</button><button class="${F.endMode==='month'?'on':''}" data-act="fset" data-k="endMode" data-v="month">Bitiş ayı</button><button class="${F.endMode==='count'?'on':''}" data-act="fset" data-k="endMode" data-v="count">Taksit</button></div>`;
+    const endField = F.endMode === 'month' ? `<label class="fl"><small>Son ay (bu ay dahil)</small><input class="in" type="month" data-f="end" value="${esc(F.end)}"></label>`
+      : F.endMode === 'count' ? `<label class="fl"><small>Toplam taksit (ay) sayısı</small><input class="in" data-f="count" inputmode="numeric" placeholder="ör. 12" value="${esc(F.count)}"></label>` : '';
+
+    return `<h2>${title}</h2>
+      ${isRec ? scopeSeg : `<div class="seg"><button class="${!c?'on':''}" data-act="fset" data-k="type" data-v="in">Gelir</button><button class="${c?'on':''}" data-act="fset" data-k="type" data-v="out">Gider</button></div>`}
+      ${amount}
+      <div class="fl"><small>Kategori</small><div class="cats">${CATS[F.type].map(k => `<button class="cat ${F.cat===k.k?'on':''} ${c?'c':''}" data-act="fset" data-k="cat" data-v="${k.k}"><i>${I[k.i]}</i>${k.n}</button>`).join('')}</div></div>
+      ${isRec ? '' : `<div class="fl"><small>Tekrar</small><div class="seg" style="margin-top:0"><button class="${!mon?'on':''}" data-act="fset" data-k="rep" data-v="once">Tek seferlik</button><button class="${mon?'on':''}" data-act="fset" data-k="rep" data-v="monthly">Her ay</button></div></div>`}
+      ${mon ? `
+        <div class="two">
+          ${F.scope === 'future' ? `<label class="fl"><small>Başlangıç</small><input class="in" value="${monthLabel(occM)}" disabled></label>` : `<label class="fl"><small>Başlangıç ayı</small><input class="in" type="month" data-f="start" value="${esc(F.start)}"></label>`}
+          <label class="fl"><small>Ayın kaçında?</small><input class="in" data-f="day" inputmode="numeric" placeholder="1–31" value="${esc(F.day)}"></label>
+        </div>
+        <div class="fl"><small>Ne kadar sürecek?</small>${endSeg}</div>${endField}
+      ` : `<label class="fl"><small>Tarih</small><input class="in" type="date" data-f="date" value="${esc(F.date)}"></label>`}
+      <label class="fl"><small>Not (isteğe bağlı)</small><input class="in" data-f="note" placeholder="${c ? (mon ? 'ör. Araç kredisi' : 'ör. Kasım kirası') : (mon ? 'ör. Maaş' : 'ör. Ekim maaşı')}" value="${esc(F.note)}"></label>
+      ${F.scope === 'future' ? `<p class="hint">Değişiklik ${monthLabel(occM)} ve sonrasına uygulanır. Önceki aylar olduğu gibi kalır.</p>` : ''}
+      ${F.scope === 'all' ? `<p class="hint">Bu düzenleme kaydın tüm aylarını (geçmiş dahil) değiştirir. Sadece ileriye dönük değişiklik için ilgili ayın kaydına dokun.</p>` : ''}
+      <button class="btn" data-act="save">${F.id || isRec ? 'Kaydet' : 'Ekle'}</button>${delBtn}`;
+  }
+  if (F.kind === 'debt'){
+    const b = F.dk === 'borc';
+    return `<h2>${F.id ? 'Düzenle' : (b ? 'Borç ekle' : 'Alacak ekle')}</h2>
+      <div class="seg"><button class="${b?'on':''}" data-act="fset" data-k="dk" data-v="borc">Borç</button><button class="${!b?'on':''}" data-act="fset" data-k="dk" data-v="alacak">Alacak</button></div>
+      ${amount}
+      <label class="fl"><small>${b ? 'Kime' : 'Kimden'}</small><input class="in" data-f="person" placeholder="İsim" value="${esc(F.person)}"></label>
+      <label class="fl"><small>${b ? 'Son ödeme tarihi' : 'Alacak tarihi'}</small><input class="in" type="date" data-f="date" value="${esc(F.date)}"></label>
+      <label class="fl"><small>Not (isteğe bağlı)</small><input class="in" data-f="note" value="${esc(F.note)}"></label>
+      <button class="btn" data-act="save">${F.id ? 'Kaydet' : 'Ekle'}</button>${del}`;
+  }
+  if (F.kind === 'sub'){
+    const y = F.period === 'yil';
+    return `<h2>${F.id ? 'Aboneliği düzenle' : 'Abonelik ekle'}</h2>
+      <label class="fl"><small>Abonelik adı</small><input class="in" data-f="name" placeholder="ör. Netflix" value="${esc(F.name)}"></label>
+      ${amount}
+      <div class="seg" style="margin-top:6px"><button class="${!y?'on':''}" data-act="fset" data-k="period" data-v="ay">Aylık</button><button class="${y?'on':''}" data-act="fset" data-k="period" data-v="yil">Yıllık</button></div>
+      <div class="${y ? 'two' : ''}">
+        <label class="fl"><small>Yenilenme günü (isteğe bağlı)</small><input class="in" data-f="day" inputmode="numeric" placeholder="1–31" value="${esc(F.day)}"></label>
+        ${y ? `<label class="fl"><small>Ay</small><select class="in" data-f="month"><option value="">—</option>${MONTHS.map((n,i) => `<option value="${i+1}" ${+F.month===i+1?'selected':''}>${n}</option>`).join('')}</select></label>` : ''}
+      </div>
+      <button class="btn" data-act="save">${F.id ? 'Kaydet' : 'Ekle'}</button>${del}`;
+  }
+  if (F.kind === 'card'){
+    const names = [...new Set(S.cards.map(c => c.name))];
+    return `<h2>${F.id ? 'Ekstreyi düzenle' : 'Ekstre ekle'}</h2>
+      <label class="fl"><small>Kart</small><input class="in" data-f="name" list="cardNames" placeholder="ör. Bonus, Axess" value="${esc(F.name)}"><datalist id="cardNames">${names.map(n => `<option value="${esc(n)}">`).join('')}</datalist></label>
+      ${amount}
+      <div class="two">
+        <label class="fl"><small>Ekstre ayı</small><input class="in" type="month" data-f="month" value="${esc(F.month)}"></label>
+        <label class="fl"><small>Son ödeme (isteğe bağlı)</small><input class="in" type="date" data-f="due" value="${esc(F.due)}"></label>
+      </div>
+      <button class="btn" data-act="save">${F.id ? 'Kaydet' : 'Ekle'}</button>${del}`;
+  }
+}
+function showForm(){ openSheet(formHTML()); }
+function refreshForm(){ const top = sheet.scrollTop; sheet.innerHTML = `<div class="grab"></div>` + formHTML(); sheet.scrollTop = top; }
+
+const COLL = {tx:'tx', debt:'debts', sub:'subs', card:'cards'};
+function openForm(kind, id, preset = {}){
+  const t = todayStr();
+  if (kind === 'tx' && (id && id.includes('@') || preset.rid)){
+    // düzenli kaydın bir ayı (rid@ay) ya da tüm seri (preset.rid)
+    const [rid, ym] = preset.rid ? [preset.rid, null] : id.split('@');
+    const r = S.rec.find(x => x.id === rid); if (!r) return;
+    F = {kind, rid, ym, scope: ym ? 'this' : 'all', type: r.type, cat: r.cat, amount: amtInput(ym ? recAmt(r, ym) : r.amount),
+      note: r.note || '', rep: 'monthly', start: r.start, day: String(r.day || 1), endMode: r.mode || (r.end ? 'month' : 'none'), end: r.end || '', count: r.tTotal ? String(r.tTotal) : ''};
+    showForm(); return;
+  }
+  const item = id ? S[COLL[kind]].find(x => x.id === id) : null;
+  if (kind === 'tx'){
+    const type = item?.type || preset.type || 'in';
+    const date = item?.date || (st.month === ymOf(t) ? t : st.month + '-01');
+    F = {kind, id, type, cat: item?.cat || CATS[type][0].k, amount: amtInput(item?.amount), date, note: item?.note || '',
+      rep: preset.rep || 'once', start: ymOf(date), day: String(+date.slice(8)), endMode: 'none', end: '', count: ''};
+  } else if (kind === 'debt'){
+    F = {kind, id, dk: item?.kind || st.debtKind, amount: amtInput(item?.amount), person: item?.person || '', date: item?.date || '', note: item?.note || ''};
+  } else if (kind === 'sub'){
+    F = {kind, id, name: item?.name || '', amount: amtInput(item?.amount), period: item?.period || 'ay', day: item?.day || '', month: item?.month || ''};
+  } else if (kind === 'card'){
+    F = {kind, id, name: item?.name || '', amount: amtInput(item?.amount), month: item?.month || st.cardMonth, due: item?.due || '', done: item?.done || false};
+  }
+  showForm();
+  if (!id) setTimeout(() => sheet.querySelector('[data-f="amount"]')?.focus({preventScroll:true}), 350);
+}
+
+function saveForm(){
+  syncF();
+  const amount = parseAmt(F.amount);
+  if (!(amount > 0)) return toast('Tutar gir');
+  if (F.kind === 'tx' && (F.rid || F.rep === 'monthly')) return saveRec(amount);
+  const coll = S[COLL[F.kind]];
+  let rec;
+  if (F.kind === 'tx'){
+    if (!F.date) return toast('Tarih seç');
+    rec = {type: F.type, cat: F.cat, amount, date: F.date, note: F.note.trim()};
+  } else if (F.kind === 'debt'){
+    if (!F.person.trim()) return toast(F.dk === 'borc' ? 'Kime borçlu olduğunu yaz' : 'Kimden alacaklı olduğunu yaz');
+    rec = {kind: F.dk, person: F.person.trim(), amount, date: F.date, note: F.note.trim()};
+  } else if (F.kind === 'sub'){
+    if (!F.name.trim()) return toast('Abonelik adını yaz');
+    const day = parseInt(F.day);
+    rec = {name: F.name.trim(), amount, period: F.period, day: day >= 1 && day <= 31 ? day : '', month: F.period === 'yil' && F.month ? +F.month : ''};
+  } else if (F.kind === 'card'){
+    if (!F.name.trim()) return toast('Kart adını yaz');
+    if (!F.month) return toast('Ekstre ayını seç');
+    rec = {name: F.name.trim(), amount, month: F.month, due: F.due};
+  }
+  if (F.id){ Object.assign(coll.find(x => x.id === F.id), rec); }
+  else { coll.push({id: uid(), ts: Date.now(), done: false, ...rec}); }
+  // eklenen kaydın ayına geç
+  if (F.kind === 'tx') st.month = ymOf(rec.date);
+  if (F.kind === 'card') st.cardMonth = rec.month;
+  if (F.kind === 'debt') st.debtKind = rec.kind;
+  save(); const wasEdit = !!F.id; closeSheet(); render(); toast(wasEdit ? 'Güncellendi' : 'Eklendi');
+}
+/* düzenli kayıt kaydetme
+   scope: this = sadece o ayın tutarı · future = o aydan itibaren (seri bölünür) · all = tüm seri */
+function saveRec(amount){
+  const done = msg => { save(); const back = F.fromList; closeSheet(); render(); toast(msg); if (back) openRecList(); };
+  if (F.scope === 'this'){
+    const r = S.rec.find(x => x.id === F.rid); r.over = r.over || {};
+    if (amount === +r.amount) delete r.over[F.ym]; else r.over[F.ym] = amount;
+    return done(`${MONTHS[+F.ym.slice(5)-1]} güncellendi`);
+  }
+  const start = F.scope === 'future' ? F.ym : F.start;
+  if (!start) return toast('Başlangıç ayını seç');
+  const day = parseInt(F.day);
+  if (!(day >= 1 && day <= 31)) return toast('Ayın gününü 1–31 arası yaz');
+  const old = F.rid ? S.rec.find(x => x.id === F.rid) : null;
+  let end = '', extra = {mode: F.endMode, tStart: '', tTotal: ''};
+  if (F.endMode === 'month'){ if (!F.end) return toast('Son ayı seç'); end = F.end; }
+  if (F.endMode === 'count'){
+    const n = parseInt(F.count); if (!(n >= 1 && n <= 600)) return toast('Taksit sayısını yaz');
+    // taksit numarası seri bölünse de ilk taksitten saymaya devam eder
+    const t0 = (old && old.mode === 'count' && F.scope !== 'all' && old.tStart) ? old.tStart : start;
+    end = addMonth(t0, n - 1); extra = {mode: 'count', tStart: t0, tTotal: n};
+  }
+  if (end && end < start) return toast('Son ay başlangıçtan önce olamaz');
+  const fields = {type: F.type, cat: F.cat, amount, day, start, end, note: F.note.trim(), ...extra};
+
+  if (!F.rid){
+    if (F.id) S.tx = S.tx.filter(x => x.id !== F.id); // tek seferlik kaydı düzenliye çevir
+    S.rec.push({id: uid(), ts: Date.now(), skip: [], over: {}, ...fields});
+    st.month = start <= st.month && (!end || st.month <= end) ? st.month : start;
+    return done('Düzenli kayıt eklendi');
+  }
+  const r = S.rec.find(x => x.id === F.rid);
+  if (F.scope === 'all' || start <= r.start){
+    Object.assign(r, fields);
+    if (F.scope === 'all'){ r.skip = (r.skip||[]).filter(m => m >= start && (!end || m <= end)); }
+    // tutar değiştiyse, yeni tutara eşit kalan özel ay tutarlarını temizle
+    for (const m in (r.over||{})) if (+r.over[m] === amount) delete r.over[m];
+  } else {
+    // seriyi böl: eski seri bir önceki ayda biter, yenisi bu aydan başlar
+    const over = {}, oldOver = {};
+    for (const [m, v] of Object.entries(r.over||{})) (m >= start ? over : oldOver)[m] = v;
+    const nr = {id: uid(), ts: Date.now(), ...fields, skip: (r.skip||[]).filter(m => m >= start), over};
+    for (const m in nr.over) if (+nr.over[m] === amount) delete nr.over[m];
+    r.end = addMonth(start, -1); r.skip = (r.skip||[]).filter(m => m < start); r.over = oldOver;
+    S.rec.push(nr);
+  }
+  done('Güncellendi');
+}
+
+function delItem(){
+  if (!F._confirm){ syncF(); F._confirm = true; refreshForm(); return; }
+  const back = F.fromList;
+  if (F.kind === 'tx' && F.rid){
+    const r = S.rec.find(x => x.id === F.rid);
+    const msg = F.scope === 'this' ? 'Bu ay atlandı' : (F.scope === 'future' && F.ym > r.start) ? 'Sonlandırıldı' : 'Silindi';
+    if (F.scope === 'this'){ r.skip = [...new Set([...(r.skip||[]), F.ym])]; if (r.over) delete r.over[F.ym]; }
+    else if (F.scope === 'future' && F.ym > r.start){ r.end = addMonth(F.ym, -1); }
+    else S.rec = S.rec.filter(x => x.id !== F.rid);
+    save(); closeSheet(); render(); toast(msg); if (back) openRecList(); return;
+  }
+  const coll = COLL[F.kind]; S[coll] = S[coll].filter(x => x.id !== F.id);
+  save(); closeSheet(); render(); toast('Silindi');
+}
+
+/* ---------- düzenli kayıtlar listesi ---------- */
+function openRecList(){
+  const now = curYM();
+  const row = r => { const c = catOf(r.type, r.cat); const ended = r.end && r.end < now;
+    return `<button class="row ${ended ? 'done' : ''}" data-act="edit-rec" data-id="${r.id}">
+      <div class="av ${r.type==='in' ? 'lime' : 'coral'}">${I[c.i]}</div>
+      <div class="t"><b>${esc(r.note || c.n)}</b><small>${r.note && r.note !== c.n ? c.n + ' · ' : ''}ayın ${r.day}'i · ${ended ? 'bitti' : r.start > now ? ymShort(r.start) + ' itibarıyla' : recInfo(r, now)}</small></div>
+      <div class="a"><b class="${r.type==='in' ? 'pos' : ''}">${r.type==='in' ? '+' : '−'}${moneyPlain(r.amount)}</b><small>${r.end ? 'son ay ' + ymShort(r.end) : 'aylık'}</small></div>
+    </button>`; };
+  const act = S.rec.filter(r => !r.end || r.end >= now), old = S.rec.filter(r => r.end && r.end < now);
+  const sorter = (a,b) => (a.type === b.type ? 0 : a.type === 'in' ? -1 : 1) || b.amount - a.amount;
+  openSheet(`<div class="sec"><h2>Düzenli kayıtlar</h2><button class="ib white" data-act="add-rec" aria-label="Ekle">${I.plus}</button></div>
+    <p class="hint" style="margin-top:0">Her ay kendiliğinden ilgili aya eklenir. Tek bir ayı değiştirmek için o aydaki kayda dokun.</p>
+    <div class="list">${act.sort(sorter).map(row).join('') || `<div class="empty"><b>Düzenli kayıt yok</b>Maaş, kira, kredi taksiti gibi her ay tekrarlananları + ile ekle.</div>`}</div>
+    ${old.length ? `<div class="day">Bitenler</div><div class="list">${old.map(row).join('')}</div>` : ''}`);
+}
+
+/* ---------- menü: yedekleme ---------- */
+function openMenu(){
+  const n = S.tx.length + S.rec.length + S.debts.length + S.subs.length + S.cards.length;
+  openSheet(`<h2>Veriler</h2>
+    <div class="list menu">
+      <button class="row" data-act="export"><div class="av lime">${I.down}</div><div class="t"><b>Yedeği indir</b><small>${n} kayıt · JSON dosyası</small></div></button>
+      <button class="row" data-act="import"><div class="av">${I.up}</div><div class="t"><b>Yedekten yükle</b><small>Daha önce indirdiğin dosyayı seç</small></div></button>
+      <button class="row" data-act="wipe"><div class="av coral">${I.trash}</div><div class="t"><b id="wipeT">Tüm verileri sil</b><small>Geri alınamaz</small></div></button>
+    </div>
+    <div class="note">Verilerin yalnızca bu telefonda saklanır. Telefon değiştirirken ya da tarayıcı verilerini temizlemeden önce yedeği indir.<br><br>Uygulamayı kurmak için: iPhone'da Safari → Paylaş → <b>Ana Ekrana Ekle</b>; Android'de Chrome → ⋮ → <b>Uygulamayı yükle</b>.</div>`);
+}
+function doExport(){
+  const blob = new Blob([JSON.stringify({app:'cf', v:2, exported: new Date().toISOString(), ...S}, null, 2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `cf-yedek-${todayStr()}.json`;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  toast('Yedek indirildi');
+}
+document.getElementById('fileIn').addEventListener('change', e => {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const d = JSON.parse(r.result);
+      if (!d || !['tx','rec','debts','subs','cards'].some(k => Array.isArray(d[k]))) throw 0;
+      S = {tx: d.tx||[], rec: d.rec||[], debts: d.debts||[], subs: d.subs||[], cards: d.cards||[]};
+      save(); closeSheet(); render(); toast('Yedek yüklendi');
+    } catch(err){ toast('Dosya okunamadı'); }
+  };
+  r.readAsText(f); e.target.value = '';
+});
+
+/* ---------- olaylar ---------- */
+document.addEventListener('click', e => {
+  const tb = e.target.closest('[data-tab]');
+  if (tb){ if (st.tab !== tb.dataset.tab){ st.tab = tb.dataset.tab; render(true); window.scrollTo({top:0}); } return; }
+  const el = e.target.closest('[data-act]'); if (!el) return;
+  const a = el.dataset.act, id = el.dataset.id;
+  switch (a){
+    case 'pm': st.month = addMonth(st.month, -1); render(); break;
+    case 'nm': st.month = addMonth(st.month, 1); render(); break;
+    case 'pcm': st.cardMonth = addMonth(st.cardMonth, -1); render(); break;
+    case 'ncm': st.cardMonth = addMonth(st.cardMonth, 1); render(); break;
+    case 'open-detail': st.detail = true; render(); document.getElementById('detail').classList.add('open'); document.getElementById('detail').scrollTop = 0; break;
+    case 'close-detail': st.detail = false; document.getElementById('detail').classList.remove('open'); render(); break;
+    case 'txf': st.txFilter = el.dataset.v; render(); break;
+    case 'dk': st.debtKind = el.dataset.v; render(); break;
+    case 'add-tx': openForm('tx', null, {type: el.dataset.type || (st.detail && st.txFilter === 'out' ? 'out' : 'in')}); break;
+    case 'edit-tx': openForm('tx', id); break;
+    case 'rec-list': openRecList(); break;
+    case 'add-rec': openForm('tx', null, {type: 'out', rep: 'monthly'}); F.fromList = true; break;
+    case 'edit-rec': openForm('tx', null, {rid: id}); F.fromList = true; break;
+    case 'add-debt': openForm('debt'); break;
+    case 'edit-debt': openForm('debt', id); break;
+    case 'add-sub': openForm('sub'); break;
+    case 'edit-sub': openForm('sub', id); break;
+    case 'add-card': openForm('card'); break;
+    case 'edit-card': openForm('card', id); break;
+    case 'toggle-debt': { const d = S.debts.find(x => x.id === id); d.done = !d.done; save(); render(); break; }
+    case 'toggle-card': { const c = S.cards.find(x => x.id === id); c.done = !c.done; save(); render(); break; }
+    case 'fset': syncF(); F[el.dataset.k] = el.dataset.v; if (el.dataset.k === 'type') F.cat = CATS[F.type][0].k; if (el.dataset.k === 'rep' && el.dataset.v === 'monthly' && F.date){ F.start = ymOf(F.date); F.day = String(+F.date.slice(8)); } F._confirm = false; refreshForm(); break;
+    case 'save': saveForm(); break;
+    case 'del': delItem(); break;
+    case 'close': closeSheet(); break;
+    case 'menu': openMenu(); break;
+    case 'export': doExport(); break;
+    case 'import': document.getElementById('fileIn').click(); break;
+    case 'wipe': {
+      const t = document.getElementById('wipeT');
+      if (!el._c){ el._c = true; t.textContent = 'Emin misin? Tekrar dokun'; t.style.color = 'var(--coral)'; return; }
+      S = blank(); save(); closeSheet(); render(); toast('Tüm veriler silindi'); break;
+    }
+  }
+});
+sheet.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches('input')) { e.preventDefault(); saveForm(); } });
+// aşağı kaydırarak kapatma
+(() => { let y0 = null;
+  sheet.addEventListener('touchstart', e => { y0 = sheet.scrollTop <= 0 ? e.touches[0].clientY : null; }, {passive:true});
+  sheet.addEventListener('touchmove', e => { if (y0 === null) return; const dy = e.touches[0].clientY - y0; if (dy > 0){ sheet.style.transition = 'none'; sheet.style.transform = `translate(-50%, ${dy}px)`; } }, {passive:true});
+  sheet.addEventListener('touchend', e => { if (y0 === null) return; const dy = e.changedTouches[0].clientY - y0; sheet.style.transition = ''; sheet.style.transform = ''; if (dy > 110) closeSheet(); y0 = null; });
+})();
+// Android geri tuşu / kenardan kaydırma: detayı kapat
+window.addEventListener('keydown', e => { if (e.key === 'Escape'){ if (sheet.classList.contains('open')) closeSheet(); else if (st.detail){ st.detail = false; document.getElementById('detail').classList.remove('open'); render(); } } });
+
+render();
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>
