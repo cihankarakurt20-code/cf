@@ -26,4 +26,4 @@ Telefonda uygulama gibi çalışan, GitHub Pages üzerinden yayınlanan kişisel
 - **Android:** Chrome'da aç → ⋮ → **Uygulamayı yükle** / **Ana ekrana ekle**
 
 ## Güncelleme
-Dosyaları değiştirip yeniden yüklediğinde `sw.js` içindeki `VERSION` değerini artır (ör. `cf-v4`), böylece telefon yeni sürümü alır.
+Dosyaları değiştirip yeniden yüklediğinde `sw.js` içindeki `VERSION` değerini artır (ör. `cf-v5`), böylece telefon yeni sürümü alır.
