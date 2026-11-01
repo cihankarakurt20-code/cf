@@ -4,7 +4,8 @@ Telefonda uygulama gibi çalışan, GitHub Pages üzerinden yayınlanan kişisel
 
 ## Özellikler
 - **Ana Sayfa:** Aylık net bakiye, gelir/gider halkası, "Bu ayın hareketleri" kutusu (dokununca tüm kayıtlar)
-- **Gelir kategorileri:** Maaş, Telif, Diğer · **Gider kategorileri:** Kira, KK, Finansman, Borç
+- **Gelir kategorileri:** Maaş, Telif, Diğer · **Gider kategorileri:** Kira, KK, Finansman, Borç, KMH
+- Sağ alttaki **+** butonu bulunduğun sekmeye göre kayıt ekler
 - **Düzenli gelir & giderler:** Gelir veya gider eklerken "Her ay" seç. Süresiz, belirli bir aya kadar ya da taksit sayısı kadar sürebilir. Her ay kendiliğinden ilgili aya eklenir.
   - Bir aydaki kayda dokunup **Sadece o ay** tutarını değiştirebilir veya o ayı atlayabilirsin (ör. ikramiye, ödenmeyen ay)
   - **Bu aydan itibaren** ile zam/indirim yapabilir ya da kaydı sonlandırabilirsin; geçmiş aylar değişmez
@@ -25,4 +26,4 @@ Telefonda uygulama gibi çalışan, GitHub Pages üzerinden yayınlanan kişisel
 - **Android:** Chrome'da aç → ⋮ → **Uygulamayı yükle** / **Ana ekrana ekle**
 
 ## Güncelleme
-Dosyaları değiştirip yeniden yüklediğinde `sw.js` içindeki `VERSION` değerini artır (ör. `cf-v3`), böylece telefon yeni sürümü alır.
+Dosyaları değiştirip yeniden yüklediğinde `sw.js` içindeki `VERSION` değerini artır (ör. `cf-v4`), böylece telefon yeni sürümü alır.
