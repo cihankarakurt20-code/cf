@@ -257,6 +257,7 @@ body.in-detail .fab{bottom:calc(var(--sb) + 22px)}
 <div class="toast" id="toast"></div>
 <input type="file" id="fileIn" accept="application/json,.json" hidden>
 
+<script src="veriler.js"></script>
 <script>
 /* =========================================================
    CF — kişisel gelir / gider · kasa
@@ -386,6 +387,23 @@ function autoPast(r){
   return delta;
 }
 (function migrate(){ const fresh = !S.v || S.v < 3; const delta = normalize(S); if (fresh){ S.opening = (+S.opening || 0) - delta; S.v = 3; } else S.opening -= delta; save(); })();
+
+/* veri paketi ekleme: mevcut kayıtlar silinmez, aynı kimlikli kayıt varsa atlanır (mükerrer olmaz),
+   geçmiş aylara ait kayıtlar kasayı değiştirmez */
+const DKEYS = ['tx','rec','debts','subs','cards'];
+function mergeData(d){
+  const add = {tx:[], rec:[], debts:[], subs:[], cards:[]}; let n = 0, skip = 0;
+  for (const k of DKEYS) for (const it of (d[k]||[])){ if (S[k].some(x => x.id === it.id)) skip++; else { add[k].push(JSON.parse(JSON.stringify(it))); n++; } }
+  S.opening -= normalize(add);
+  for (const k of DKEYS) S[k].push(...add[k]);
+  return {n, skip};
+}
+// gömülü başlangıç verileri (veriler.js) — her paket yalnızca bir kez eklenir
+(function seed(){
+  const d = window.CF_SEED; if (!d || !d.id) return;
+  S.seeds = S.seeds || []; if (S.seeds.includes(d.id)) return;
+  mergeData(d); S.seeds.push(d.id); save();
+})();
 
 /* =========================================================
    HAREKETLER — her şey "kalem" (item) olarak
@@ -1009,17 +1027,13 @@ document.getElementById('fileIn').addEventListener('change', e => {
   const rd = new FileReader();
   rd.onload = () => {
     try {
-      const d = JSON.parse(rd.result), keys = ['tx','rec','debts','subs','cards'];
-      if (!d || !keys.some(k => Array.isArray(d[k]))) throw 0;
+      const d = JSON.parse(rd.result);
+      if (!d || !DKEYS.some(k => Array.isArray(d[k]))) throw 0;
       if (d.merge){
-        // veri paketi: mevcut kayıtlar silinmez; aynı kimlikli kayıt zaten varsa atlanır (mükerrer olmaz)
-        const add = {tx:[], rec:[], debts:[], subs:[], cards:[]}; let n = 0, skip = 0;
-        for (const k of keys) for (const it of (d[k]||[])){ if (S[k].some(x => x.id === it.id)) skip++; else { add[k].push(it); n++; } }
-        S.opening -= normalize(add); // geçmiş kayıtlar kasayı değiştirmez
-        for (const k of keys) S[k].push(...add[k]);
+        const {n, skip} = mergeData(d);
         save(); closeSheet(); render(); toast(`${n} kayıt eklendi${skip ? ` · ${skip} zaten vardı` : ''}`);
       } else {
-        S = Object.assign(blank(), d); const delta = normalize(S); if (!d.v || d.v < 3) S.opening = (+S.opening||0) - delta; S.v = 3;
+        const seeds = S.seeds; S = Object.assign(blank(), d); S.seeds = d.seeds || seeds; const delta = normalize(S); if (!d.v || d.v < 3) S.opening = (+S.opening||0) - delta; S.v = 3;
         save(); closeSheet(); render(); toast('Yedek yüklendi');
       }
     } catch(err){ toast('Dosya okunamadı'); }
@@ -1079,7 +1093,7 @@ document.addEventListener('click', e => {
     case 'wipe': {
       const t = document.getElementById('wipeT');
       if (!el._c){ el._c = true; t.textContent = 'Emin misin? Tekrar dokun'; t.style.color = 'var(--orange)'; return; }
-      S = blank(); save(); closeSheet(); render(); toast('Tüm veriler silindi'); break;
+      { const seeds = S.seeds; S = blank(); S.seeds = seeds; } save(); closeSheet(); render(); toast('Tüm veriler silindi'); break;
     }
   }
 });
