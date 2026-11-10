@@ -1,29 +1,32 @@
-# CF — Kişisel Gelir & Gider
+# CF — Kişisel Gelir & Gider · Kasa
 
 Telefonda uygulama gibi çalışan, GitHub Pages üzerinden yayınlanan kişisel bütçe uygulaması.
 
-## Özellikler
-- **Ana Sayfa:** Aylık net bakiye, gelir/gider halkası, "Bu ayın hareketleri" kutusu (dokununca tüm kayıtlar)
-- **Gelir kategorileri:** Maaş, Telif, Diğer · **Gider kategorileri:** Kira, KK, Finansman, Borç, KMH
-- Sağ alttaki **+** butonu bulunduğun sekmeye göre kayıt ekler
-- **Düzenli gelir & giderler:** Gelir veya gider eklerken "Her ay" seç. Süresiz, belirli bir aya kadar ya da taksit sayısı kadar sürebilir. Her ay kendiliğinden ilgili aya eklenir.
-  - Bir aydaki kayda dokunup **Sadece o ay** tutarını değiştirebilir veya o ayı atlayabilirsin (ör. ikramiye, ödenmeyen ay)
-  - **Bu aydan itibaren** ile zam/indirim yapabilir ya da kaydı sonlandırabilirsin; geçmiş aylar değişmez
-  - Ana sayfadaki "Düzenli gelir & giderler" kartından hepsini görebilirsin
-- **Borçlar / Alacaklar:** Kime/kimden, son ödeme / alacak tarihi, kalan gün, toplamlar
-- **Abonelikler:** Aylık ve yıllık toplam
-- **Kartlar:** Aylık ekstreler ve toplamı
-- Çevrimdışı çalışır, veriler telefonda saklanır, yedek indirme/yükleme vardır (sol üstteki ⠿ menüsü)
+## Kasa nasıl çalışır?
+- **Kasa** = başlangıçta girdiğin gerçek tutar + "Aldım" dediğin gelirler − "Ödedim" dediğin ödemeler.
+- Planlanan gelirler "Bekleyen gelirler"de durur; kasaya **sen "Aldım" deyince** girer.
+- Tüm ödemeler (düzenli giderler, tek seferlik giderler, borç ödemeleri, kart ekstreleri) **"Ödedim" deyince** kasadan düşer. Alacak tahsil edilince kasaya girer.
+- **Abonelikler kasayı etkilemez**; kart ekstresinin içinde ödendikleri için ayrıca sayılmazlar.
+- Borçlarda ve kart ekstrelerinde kısmi ödeme yapılabilir; kalan tutar takip edilir.
+- Yanlışlıkla işaretlediğin bir şeyi yuvarlağa tekrar dokunarak ya da bildirimdeki "Geri al" ile geri alabilirsin.
+- Menüdeki **Kasayı düzelt** ile kasayı her zaman gerçek tutara eşitleyebilirsin.
+
+## Diğer özellikler
+- Gelir kategorileri: Maaş, Telif, Diğer · Gider kategorileri: Kira, KK, Finansman, Borç, KMH
+- Düzenli (her ay) kayıtlar: süresiz, bitiş ayına kadar veya taksitli; tek ay ya da "bu aydan itibaren" düzenleme
+- Borçlar / Alacaklar, Abonelikler (aylık-yıllık toplam), Kartlar (aylık ekstreler)
+- Sağ alttaki **+** bulunduğun sekmeye göre kayıt ekler
+- Çevrimdışı çalışır; veriler telefonda saklanır; yedek indirme/yükleme (menü)
 
 ## GitHub Pages'te yayınlama
-1. github.com'da yeni bir repo aç (ör. `cf`). Ücretsiz hesapta Pages için repo **Public** olmalı. Verilerin repoda değil telefonunda durur, yani public repo verilerini göstermez.
-2. **Add file → Upload files** ile bu klasördeki her şeyi (`index.html`, `manifest.webmanifest`, `sw.js`, `icons/`, `fonts/`) yükle → **Commit changes**.
-3. **Settings → Pages → Build and deployment → Source: Deploy from a branch**, Branch: `main`, klasör: `/ (root)` → **Save**.
-4. 1–2 dakika sonra adres hazır olur: `https://KULLANICI-ADIN.github.io/cf/`
+1. github.com'da bir repo aç (ör. `cf`). Ücretsiz hesapta Pages için repo **Public** olmalı. Verilerin repoda değil telefonunda durur.
+2. **Add file → Upload files** ile bu klasördeki her şeyi (`index.html`, `manifest.webmanifest`, `sw.js`, `icons/`, `fonts/`) yükle → **Commit changes**. Eski `fonts/outfit-…` dosyaları repoda kalsa da sorun olmaz, istersen silebilirsin.
+3. **Settings → Pages → Source: Deploy from a branch**, Branch: `main`, klasör: `/ (root)` → **Save**.
+4. Adres: `https://KULLANICI-ADIN.github.io/cf/`
 
 ## Telefona kurma
-- **iPhone:** Adresi Safari'de aç → Paylaş → **Ana Ekrana Ekle**
-- **Android:** Chrome'da aç → ⋮ → **Uygulamayı yükle** / **Ana ekrana ekle**
+- **iPhone:** Safari → Paylaş → **Ana Ekrana Ekle**
+- **Android:** Chrome → ⋮ → **Uygulamayı yükle**
 
 ## Güncelleme
-Dosyaları değiştirip yeniden yüklediğinde `sw.js` içindeki `VERSION` değerini artır (ör. `cf-v5`), böylece telefon yeni sürümü alır.
+Dosyaları değiştirip yeniden yüklediğinde `sw.js` içindeki `VERSION` değerini artır (ör. `cf-v6`).
