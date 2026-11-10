@@ -9,6 +9,7 @@ Telefonda uygulama gibi çalışan, GitHub Pages üzerinden yayınlanan kişisel
 - **Abonelikler kasayı etkilemez**; kart ekstresinin içinde ödendikleri için ayrıca sayılmazlar.
 - Borçlarda ve kart ekstrelerinde kısmi ödeme yapılabilir; kalan tutar takip edilir.
 - Yanlışlıkla işaretlediğin bir şeyi yuvarlağa tekrar dokunarak ya da bildirimdeki "Geri al" ile geri alabilirsin.
+- Menüdeki **Baştan başla** abonelik ve borçları bırakıp diğer her şeyi siler, kasayı sıfırlar.
 - Menüdeki **Kasayı düzelt** ile kasayı her zaman gerçek tutara eşitleyebilirsin.
 
 ## Diğer özellikler
@@ -19,7 +20,7 @@ Telefonda uygulama gibi çalışan, GitHub Pages üzerinden yayınlanan kişisel
 - Çevrimdışı çalışır; veriler telefonda saklanır; yedek indirme/yükleme (menü)
 
 ## Başlangıç verileri
-`veriler.js` dosyası ekran görüntülerinden ve Sincap Ekim/Kasım 2026 raporlarından aktarılan abonelik, borç ve gelir/gider kayıtlarını içerir. Uygulama ilk açılışta bunları **bir kez** ekler; aynı kayıt zaten varsa atlar, sonradan sildiğin kayıtları geri getirmez.
+`veriler.js` dosyası ekran görüntülerinden aktarılan abonelik ve borç kayıtlarını içerir. Uygulama ilk açılışta bunları **bir kez** ekler; aynı kayıt zaten varsa atlar, sonradan sildiğin kayıtları geri getirmez.
 ⚠️ Repo herkese açıksa bu dosyadaki bilgiler (kişi adları, tutarlar) de herkese açık olur. Verileri telefonuna aldıktan sonra `veriler.js` dosyasını repodan silebilirsin; uygulama çalışmaya devam eder.
 
 ## GitHub Pages'te yayınlama

@@ -1005,12 +1005,40 @@ function kasaSave(){
   S.opening = (+S.opening || 0) + (v - kasa()); S.kasaSet = true; save(); closeSheet(); render(); toast('Kasa güncellendi');
 }
 
+/* ---------- baştan başla: abonelik + borçlar kalır ---------- */
+function resetHTML(){
+  const nPays = sum(S.debts, d => (d.pays||[]).length);
+  return `<h2>Baştan başla</h2>
+    <p class="hint" style="margin-top:4px">Şunlar silinir:</p>
+    <div class="list menu">
+      <div class="row"><div class="t"><b>${S.tx.length} gelir / gider kaydı</b><small>Tek seferlik kayıtların hepsi</small></div></div>
+      <div class="row"><div class="t"><b>${S.rec.length} düzenli kayıt</b><small>Maaş, kira, taksitler…</small></div></div>
+      <div class="row"><div class="t"><b>${S.cards.length} kart ekstresi</b><small>Kartlar sekmesindekiler</small></div></div>
+      <div class="row"><div class="t"><b>Kasa</b><small>Sıfırlanır; ardından gerçek tutarı girersin</small></div></div>
+    </div>
+    <p class="hint">Kalanlar: <b>${S.subs.length} abonelik</b> ve <b>${S.debts.length} borç/alacak</b>.</p>
+    ${nPays ? `<div class="fl"><small>Borçlara girilmiş ${nPays} ödeme</small><div class="seg" style="margin-top:0"><button class="${F.pays==='del'?'on':''}" data-act="rset" data-v="del">Silinsin</button><button class="${F.pays==='keep'?'on':''}" data-act="rset" data-v="keep">Kalsın</button></div></div>` : ''}
+    <button class="btn line" data-act="export">Önce yedeği indir</button>
+    <button class="btn o" data-act="reset-go">${F._confirm ? 'Emin misin? Tekrar dokun' : 'Sil ve baştan başla'}</button>`;
+}
+function openReset(){ F = {kind:'reset', pays:'del'}; openSheet(resetHTML()); }
+function doReset(){
+  if (!F._confirm){ F._confirm = true; sheet.innerHTML = `<div class="grab"></div>` + resetHTML(); return; }
+  S.tx = []; S.rec = []; S.cards = [];
+  if (F.pays === 'del') for (const d of S.debts){ d.pays = []; }
+  S.opening = 0; S.opening = -kasa(); S.kasaSet = false;
+  st.month = curYM(); st.cardMonth = curYM();
+  save(); closeSheet(); render(); toast('Temizlendi · şimdi kasadaki tutarı gir');
+  setTimeout(openKasaFix, 600);
+}
+
 /* ---------- menü ---------- */
 function openMenu(){
   const n = S.tx.length + S.rec.length + S.debts.length + S.subs.length + S.cards.length;
   openSheet(`<h2>Menü</h2>
     <div class="list menu">
       <button class="row" data-act="kasa-fix"><div class="av">${I.safe}</div><div class="t"><b>Kasayı düzelt</b><small>Kasadaki gerçek tutarı gir</small></div></button>
+      <button class="row" data-act="reset"><div class="av o">${I.repeat}</div><div class="t"><b>Baştan başla</b><small>Abonelikler ve borçlar kalır, gerisi silinir</small></div></button>
       <button class="row" data-act="export"><div class="av y">${I.dl}</div><div class="t"><b>Yedeği indir</b><small>${n} kayıt · JSON dosyası</small></div></button>
       <button class="row" data-act="import"><div class="av g">${I.ul}</div><div class="t"><b>Yedekten yükle</b><small>Yedek ya da veri paketi seç</small></div></button>
       <button class="row" data-act="wipe"><div class="av o">${I.trash}</div><div class="t"><b id="wipeT">Tüm verileri sil</b><small>Geri alınamaz</small></div></button>
@@ -1089,6 +1117,9 @@ document.addEventListener('click', e => {
     case 'kasa-fix': openKasaFix(); break;
     case 'kasa-save': kasaSave(); break;
     case 'export': doExport(); break;
+    case 'reset': openReset(); break;
+    case 'rset': F.pays = el.dataset.v; F._confirm = false; sheet.innerHTML = `<div class="grab"></div>` + resetHTML(); break;
+    case 'reset-go': doReset(); break;
     case 'import': document.getElementById('fileIn').click(); break;
     case 'wipe': {
       const t = document.getElementById('wipeT');

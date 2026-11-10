@@ -1,6 +1,6 @@
 // CF — çevrimdışı çalışma için service worker
 // Uygulamayı güncellediğinde aşağıdaki sürüm numarasını artır.
-const VERSION = 'cf-v6';
+const VERSION = 'cf-v7';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './veriler.js', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png',
   './fonts/inter-tight-latin-400-normal.woff2', './fonts/inter-tight-latin-ext-400-normal.woff2', './fonts/inter-tight-latin-500-normal.woff2', './fonts/inter-tight-latin-ext-500-normal.woff2', './fonts/inter-tight-latin-600-normal.woff2', './fonts/inter-tight-latin-ext-600-normal.woff2', './fonts/inter-tight-latin-700-normal.woff2', './fonts/inter-tight-latin-ext-700-normal.woff2'];
 
